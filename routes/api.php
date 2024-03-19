@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BarrioController;
+use App\Http\Controllers\SolicitudController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('login', [AuthController::class, 'login']);
+Route::get('solicitudes', [SolicitudController::class, 'index']);
+Route::post('solicitudes', [SolicitudController::class, 'store']);
+
+/* Barrios */
+Route::get('barrios', [BarrioController::class, 'index']);
