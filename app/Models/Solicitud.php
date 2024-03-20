@@ -24,10 +24,17 @@ class Solicitud extends Model
         "lote",
         "piso",
         "depto",
-        /*  "token_verificacion",
+        "token_verificacion",
         "ultimo_envio_email",
-        "verificado",
-        "estado_id", */
+        "fecha_verificado",
+        "estado_id",
+    ];
+
+    protected $hidden = [
+        "token_verificacion",
+        "ultimo_envio_email",
+        "fecha_verificado",
+        "estado_id",
     ];
 
     public function barrio()

@@ -29,7 +29,7 @@ class CreateSolicitudesTable extends Migration
             $table->string('depto');
             $table->string('token_verificacion')->nullable();
             $table->timestamp('ultimo_envio_email')->nullable();
-            $table->boolean('verificado')->default(false);
+            $table->timestamp('fecha_verificado')->nullable();
             $table->unsignedBigInteger('estado_id')->default(1);
 
             $table->timestamps();

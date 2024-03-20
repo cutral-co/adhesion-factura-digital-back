@@ -22,3 +22,4 @@ Route::post('solicitudes', [SolicitudController::class, 'store']);
 
 /* Barrios */
 Route::get('barrios', [BarrioController::class, 'index']);
+Route::get('enviar_email', [BarrioController::class, 'email']);

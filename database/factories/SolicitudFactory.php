@@ -32,8 +32,8 @@ class SolicitudFactory extends Factory
             'piso' => $this->faker->randomNumber(),
             'depto' => $this->faker->randomNumber(),
             'token_verificacion' => $this->faker->md5,
-            'ultimo_envio_email' => $this->faker->dateTime,
-            'verificado' => $this->faker->boolean,
+            'ultimo_envio_email' => null,
+            'fecha_verificado' => null,
             'estado_id' => 1,
         ];
     }

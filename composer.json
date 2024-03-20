@@ -50,7 +50,7 @@
             "@php artisan key:generate --ansi"
         ],
         "reset": [
-            "@php artisan migrate:rollback && @php artisan migrate && @php artisan db:seed "
+            "@php artisan migrate:reset && @php artisan migrate && @php artisan db:seed "
         ]
     },
     "extra": {
