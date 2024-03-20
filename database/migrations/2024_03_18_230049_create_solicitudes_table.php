@@ -23,10 +23,10 @@ class CreateSolicitudesTable extends Migration
             $table->unsignedBigInteger('barrio_id');
             $table->string('calle');
             $table->string('altura');
-            $table->string('manzana');
-            $table->string('lote');
-            $table->string('piso');
-            $table->string('depto');
+            $table->string('manzana')->nullable();
+            $table->string('lote')->nullable();
+            $table->string('piso')->nullable();
+            $table->string('depto')->nullable();
             $table->string('token_verificacion')->nullable();
             $table->timestamp('ultimo_envio_email')->nullable();
             $table->timestamp('fecha_verificado')->nullable();
