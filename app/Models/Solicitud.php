@@ -35,6 +35,7 @@ class Solicitud extends Model
         "ultimo_envio_email",
         "fecha_verificado",
         "estado_id",
+        "barrio_id",
     ];
 
     public function barrio()

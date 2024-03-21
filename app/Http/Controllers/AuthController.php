@@ -9,10 +9,10 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = $request->only('cuil', 'password');
+        $credentials = $request->only('cuit', 'password');
 
         $validator = Validator::make($credentials, [
-            'cuil' => 'required|min:11|max:11',
+            'cuit' => 'required|min:11|max:11',
             'password' => 'required|string'
         ]);
 
@@ -21,7 +21,7 @@ class AuthController extends Controller
         }
 
         if (!$token = \Tymon\JWTAuth\Facades\JWTAuth::attempt($credentials)) {
-            return sendResponse(null, 'Credenciales invalidasasdasd', 400);
+            return sendResponse(null, 'Credenciales invalidas', 400);
         }
 
         return $this->respondWithToken($token);

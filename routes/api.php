@@ -17,7 +17,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('login', [AuthController::class, 'login']);
+
 Route::get('solicitudes', [SolicitudController::class, 'index']);
+Route::get('solicitudes/pendientes', [SolicitudController::class, 'pendientes']);
+Route::get('solicitudes/aprobadas', [SolicitudController::class, 'aprobadas']);
+Route::get('solicitudes/rechazadas', [SolicitudController::class, 'rechazadas']);
+
+Route::post('solicitudes/cambiar-estado', [SolicitudController::class, 'cambiarEstado']);
 Route::post('solicitudes', [SolicitudController::class, 'store']);
 
 /* Barrios */
