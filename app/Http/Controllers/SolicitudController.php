@@ -64,15 +64,13 @@ class SolicitudController extends Controller
             return sendResponse(null, "Número de CUIT/CUIL ya tiene un correo electrónico activado");
         }
 
-
-
         $body['token_verificacion'] = uniqid();
         $solicitud = Solicitud::create($body);
 
         $link = env('APP_URL') . "verificar-correo?token=$solicitud->token_verificacion";
 
         try {
-            /* Mail::to($solicitud->email)->send(new EmailConfirmacion($link)); */
+            Mail::to($solicitud->email)->send(new EmailConfirmacion($link));
             $solicitud->ultimo_envio_email = \Carbon\Carbon::now();
             $solicitud->save();
         } catch (\Throwable $th) {
