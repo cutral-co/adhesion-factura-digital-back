@@ -17,15 +17,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout']);
 
-Route::get('solicitudes', [SolicitudController::class, 'index']);
-Route::get('solicitudes/pendientes', [SolicitudController::class, 'pendientes']);
-Route::get('solicitudes/aprobadas', [SolicitudController::class, 'aprobadas']);
-Route::get('solicitudes/rechazadas', [SolicitudController::class, 'rechazadas']);
-
-Route::post('solicitudes/cambiar-estado', [SolicitudController::class, 'cambiarEstado']);
+Route::get('barrios', [BarrioController::class, 'index']);
 Route::post('solicitudes', [SolicitudController::class, 'store']);
 
-/* Barrios */
-Route::get('barrios', [BarrioController::class, 'index']);
-Route::get('enviar_email', [BarrioController::class, 'email']);
+Route::get('get_by_token', [SolicitudController::class, 'get_by_token']);
+
+Route::group(['middleware' => ['jwt.verify', 'permission:admin']], function () {
+    Route::get('solicitudes', [SolicitudController::class, 'index']);
+
+    Route::get('solicitudes/pendientes', [SolicitudController::class, 'pendientes']);
+    Route::get('solicitudes/aprobadas', [SolicitudController::class, 'aprobadas']);
+    Route::get('solicitudes/rechazadas', [SolicitudController::class, 'rechazadas']);
+
+    Route::post('solicitudes/cambiar-estado', [SolicitudController::class, 'cambiarEstado']);
+});
+
+
+/* Route::get('test', function(){
+    return env('APP_CLIENT_URL') . '#/asd';
+}); */

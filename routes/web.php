@@ -15,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/verificar-correo', [SolicitudController::class, 'verificarCorreo']);
+Route::get('/correo-verificado', [SolicitudController::class, 'correoVerificado']);

@@ -33,7 +33,7 @@
 
                 vertical-align: middle;
 
-                ">Activar cuenta de correo electrónico</a>
+                ">Confirmar</a>
             </td>
         </tr>
     </table>

@@ -37,7 +37,8 @@ class AuthController extends Controller
             return response()->json(['error' => $validator->errors()], 200);
         }
 
-        \Tymon\JWTAuth\Facades\JWTAuth::invalidate($request->token);
+        $token = $request->token;
+        \Tymon\JWTAuth\Facades\JWTAuth::invalidate($token);
 
         return response()->json([
             'status' => true,
