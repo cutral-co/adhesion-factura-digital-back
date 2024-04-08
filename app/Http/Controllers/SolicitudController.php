@@ -126,4 +126,35 @@ class SolicitudController extends Controller
 
         return view('emailConfirmation');
     }
+
+    public function monitor()
+    {
+        $monitor = [
+            'total' => Solicitud::all()->count(),
+            'pendientes' => Solicitud::whereNotNull('fecha_verificado')->where('estado_id', 1)->count(),
+            'aprobadas' => Solicitud::where('estado_id', 2)->count(),
+            'rechazadas' => Solicitud::where('estado_id', 3)->count(),
+            'sin_verificar' => Solicitud::whereNull('fecha_verificado')->count(),
+        ];
+
+        return sendResponse($monitor);
+    }
+
+    public function testCorreo()
+    {
+        $dosDiasAtras = \Carbon\Carbon::now()->subDays(2);
+
+        $solicitudd = Solicitud::where('ultimo_envio_email', '<=', $dosDiasAtras)
+            ->whereNull('fecha_verificado')
+            ->get();
+
+        foreach ($solicitudd as $solicitud) {
+            $link = env('APP_URL') . "verificar-correo?token=$solicitud->token_verificacion";
+            Mail::to($solicitud->email)->send(new EmailConfirmacion($link));
+            $solicitud->ultimo_envio_email = \Carbon\Carbon::now();
+            $solicitud->save();
+        }
+
+        return sendResponse($solicitudd);
+    }
 }

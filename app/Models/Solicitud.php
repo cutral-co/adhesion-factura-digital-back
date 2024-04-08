@@ -17,13 +17,22 @@ class Solicitud extends Model
         "cuit",
         "email",
         "phone",
+
+        /* Cuando no es de Cutral Co el valor es null */
         "barrio_id",
+
+        /* Cuando selecciono otra localidad, barrio_id deberia ser null */
+        'provincia_id',
+        'municipio',
+        'barrio',
+
         "calle",
         "altura",
         "manzana",
         "lote",
         "piso",
         "depto",
+
         "token_verificacion",
         "ultimo_envio_email",
         "fecha_verificado",
@@ -41,6 +50,11 @@ class Solicitud extends Model
     public function barrio()
     {
         return $this->belongsTo(Barrio::class);
+    }
+
+    public function provincia()
+    {
+        return $this->belongsTo(Provincia::class);
     }
 
     public function estado()

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarrioController;
+use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\SolicitudController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,8 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 
 Route::get('barrios', [BarrioController::class, 'index']);
+Route::get('provincias', [ProvinciaController::class, 'index']);
+
 Route::post('solicitudes', [SolicitudController::class, 'store']);
 
 Route::get('get_by_token', [SolicitudController::class, 'get_by_token']);
@@ -32,6 +35,7 @@ Route::group(['middleware' => ['jwt.verify', 'permission:admin']], function () {
     Route::get('solicitudes/rechazadas', [SolicitudController::class, 'rechazadas']);
 
     Route::post('solicitudes/cambiar-estado', [SolicitudController::class, 'cambiarEstado']);
+    Route::get('solicitudes/monitor', [SolicitudController::class, 'monitor']);
 });
 
 
