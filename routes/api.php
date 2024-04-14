@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarrioController;
+use App\Http\Controllers\MonitorController;
 use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\SolicitudController;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +36,9 @@ Route::group(['middleware' => ['jwt.verify', 'permission:admin']], function () {
     Route::get('solicitudes/rechazadas', [SolicitudController::class, 'rechazadas']);
 
     Route::post('solicitudes/cambiar-estado', [SolicitudController::class, 'cambiarEstado']);
-    Route::get('solicitudes/monitor', [SolicitudController::class, 'monitor']);
+    Route::get('monitor', [MonitorController::class, 'index']);
+    Route::get('monitor/resumen', [MonitorController::class, 'resumen']);
+    Route::get('monitor/total_mensual', [MonitorController::class, 'cantidadSolicitudesMes']);
 });
 
 

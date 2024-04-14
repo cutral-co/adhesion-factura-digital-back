@@ -10,6 +10,7 @@ use App\Mail\EmailAprobacion;
 use App\Mail\EmailConfirmacion;
 use App\Mail\EmailRechazo;
 use App\Models\Solicitud;
+use Illuminate\Support\Facades\DB;
 
 class SolicitudController extends Controller
 {
@@ -137,7 +138,15 @@ class SolicitudController extends Controller
             'sin_verificar' => Solicitud::whereNull('fecha_verificado')->count(),
         ];
 
-        return sendResponse($monitor);
+        $solicitudesPorMes = Solicitud::select(
+            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
+            ->get();
+
+        return sendResponse($solicitudesPorMes);
     }
 
     public function testCorreo()

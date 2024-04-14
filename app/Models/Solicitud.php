@@ -46,10 +46,9 @@ class Solicitud extends Model
         "estado_id",
         "barrio_id",
     ];
-
-    public function barrio()
+    public function bar()
     {
-        return $this->belongsTo(Barrio::class);
+        return $this->belongsTo(Barrio::class, 'barrio_id');
     }
 
     public function provincia()
@@ -60,5 +59,20 @@ class Solicitud extends Model
     public function estado()
     {
         return $this->belongsTo(Estado::class);
+    }
+
+    public static function getCountSinVerificar()
+    {
+        return self::whereNull('fecha_verificado')->count();
+    }
+
+    public static function getCountPendientes()
+    {
+        return self::whereNotNull('fecha_verificado')->where('estado_id', 1)->count();
+    }
+
+    public static function getCountAprobadas()
+    {
+        return self::where('estado_id', 2)->count();
     }
 }

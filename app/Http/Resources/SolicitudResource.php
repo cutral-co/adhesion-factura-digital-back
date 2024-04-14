@@ -16,7 +16,12 @@ class SolicitudResource extends JsonResource
     {
         $array = parent::toArray($request);
 
-        $array['barrio'] = $this->barrio->name;
+        $array['barrio'] = null;
+        if ($this->bar) {
+            $array['barrio'] = $this->bar->name;
+        } else {
+            $array['barrio'] = $this->barrio;
+        }
         $array['estado'] = $this->estado->name;
 
         return $array;
