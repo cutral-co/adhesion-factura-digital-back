@@ -41,7 +41,4 @@ Route::group(['middleware' => ['jwt.verify', 'permission:admin']], function () {
     Route::get('monitor/total_mensual', [MonitorController::class, 'cantidadSolicitudesMes']);
 });
 
-
-/* Route::get('test', function(){
-    return env('APP_CLIENT_URL') . '#/asd';
-}); */
+Route::get('correo', [SolicitudController::class, 'envio_correo_verificar']);

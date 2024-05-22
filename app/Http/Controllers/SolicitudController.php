@@ -149,7 +149,7 @@ class SolicitudController extends Controller
         return sendResponse($solicitudesPorMes);
     }
 
-    public function testCorreo()
+    public function envio_correo_verificar()
     {
         $dosDiasAtras = \Carbon\Carbon::now()->subDays(2);
 
@@ -163,7 +163,6 @@ class SolicitudController extends Controller
             $solicitud->ultimo_envio_email = \Carbon\Carbon::now();
             $solicitud->save();
         }
-
-        return sendResponse($solicitudd);
+        return redirect()->away('http://www.cutralco.gob.ar/');
     }
 }
