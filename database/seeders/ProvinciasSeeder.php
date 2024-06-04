@@ -14,6 +14,7 @@ class ProvinciasSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('provincias')->insert(['name' => 'Ciudad Autónoma de Buenos Aires (CABA)']);
         DB::table('provincias')->insert(['name' => 'Buenos Aires']);
         DB::table('provincias')->insert(['name' => 'Catamarca']);
         DB::table('provincias')->insert(['name' => 'Córdoba']);

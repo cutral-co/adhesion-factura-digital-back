@@ -47,6 +47,12 @@ class SolicitudController extends Controller
         return sendResponse(SolicitudResource::collection($solicitudes));
     }
 
+    public function no_verificadas()
+    {
+        $solicitudes = Solicitud::whereNull('fecha_verificado')->get();
+        return sendResponse(SolicitudResource::collection($solicitudes));
+    }
+
     public function cambiarEstado(Request $request)
     {
         $solicitud = Solicitud::find($request->id);
@@ -99,6 +105,14 @@ class SolicitudController extends Controller
         }
 
         return sendResponse($solicitud);
+    }
+
+    public function destroy(Request $request)
+    {
+        $model = Solicitud::find($request->id);
+        $model->delete();
+
+        return sendResponse('Recurso eliminado');
     }
 
     public function verificarCorreo(Request $request)

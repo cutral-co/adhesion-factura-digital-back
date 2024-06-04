@@ -34,6 +34,9 @@ Route::group(['middleware' => ['jwt.verify', 'permission:admin']], function () {
     Route::get('solicitudes/pendientes', [SolicitudController::class, 'pendientes']);
     Route::get('solicitudes/aprobadas', [SolicitudController::class, 'aprobadas']);
     Route::get('solicitudes/rechazadas', [SolicitudController::class, 'rechazadas']);
+    Route::get('solicitudes/no_verificadas', [SolicitudController::class, 'no_verificadas']);
+
+    Route::post('solicitudes/borrar', [SolicitudController::class, 'destroy']);
 
     Route::post('solicitudes/cambiar-estado', [SolicitudController::class, 'cambiarEstado']);
     Route::get('monitor', [MonitorController::class, 'index']);
