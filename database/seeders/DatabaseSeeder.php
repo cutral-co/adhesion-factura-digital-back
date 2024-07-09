@@ -15,16 +15,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'name' => 'Administrador',
-            'cuit' => '20999999991',
-            'password' => Hash::make('20999999991'),
+        $this->call([
+            PermissionsDemoSeeder::class,
         ]);
-        DB::table('barrios')->insert(['name' => 'Centro']);
-        DB::table('barrios')->insert(['name' => 'Belgrano']);
-        DB::table('barrios')->insert(['name' => 'San Martín']);
-
-        DB::table('estados')->insert(['name' => 'Nuevo']);
-        /* \App\Models\Solicitud::factory(10)->create(); */
     }
 }

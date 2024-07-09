@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+
+use App\Models\{User};
 
 class AuthController extends Controller
 {
@@ -20,7 +23,7 @@ class AuthController extends Controller
             return response()->json(['error' => $validator->errors()], 422);
         }
 
-        if (!$token = \Tymon\JWTAuth\Facades\JWTAuth::attempt($credentials)) {
+        if (!$token = JWTAuth::attempt($credentials)) {
             return sendResponse(null, 'Credenciales invalidas', 400);
         }
 
@@ -38,7 +41,7 @@ class AuthController extends Controller
         }
 
         $token = $request->token;
-        \Tymon\JWTAuth\Facades\JWTAuth::invalidate($token);
+        JWTAuth::invalidate($token);
 
         return response()->json([
             'status' => true,
@@ -46,20 +49,18 @@ class AuthController extends Controller
         ]);
     }
 
-    public function get_user()
-    {
-        return response()->json(['user' => auth()->user()]);
-    }
-
     public function refresh()
     {
-        return $this->respondWithToken(\Tymon\JWTAuth\Facades\JWTAuth::refresh());
+        return $this->respondWithToken(JWTAuth::refresh());
     }
 
     protected function respondWithToken($token)
     {
+        $user = User::where('id', auth()->user()->id)->with('person')->first();
         $data = [
-            'user' => auth()->user(),
+            'user' => $user,
+            'roles' => $user->roles,
+            'permissions' => $user->permissions,
             'token' => $token,
         ];
 

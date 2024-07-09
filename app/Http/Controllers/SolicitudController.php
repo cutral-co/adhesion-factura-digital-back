@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\SolicitudResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\{Mail, DB};
 
 use App\Mail\EmailAprobacion;
 use App\Mail\EmailConfirmacion;
 use App\Mail\EmailRechazo;
 use App\Models\Solicitud;
-use Illuminate\Support\Facades\DB;
 
 class SolicitudController extends Controller
 {

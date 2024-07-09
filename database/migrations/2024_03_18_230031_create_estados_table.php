@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\{DB, Schema};
 
 class CreateEstadosTable extends Migration
 {
@@ -18,6 +18,10 @@ class CreateEstadosTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
+
+        DB::table('estados')->insert(['name' => 'Nuevo']);
+        DB::table('estados')->insert(['name' => 'Aprobado']);
+        DB::table('estados')->insert(['name' => 'Rechazado']);
     }
 
     /**

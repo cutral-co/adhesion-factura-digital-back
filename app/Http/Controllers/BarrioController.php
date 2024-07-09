@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Barrio;
+use App\Models\BarrioMunicipio;
 
 class BarrioController extends Controller
 {
     public function index()
     {
-        $barrios = Barrio::all();
+        $barrios = BarrioMunicipio::all();
         return sendResponse($barrios);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BarrioMunicipio;
 use App\Models\Solicitud;
 use DateTime;
 use Illuminate\Http\Request;
@@ -134,16 +135,13 @@ class MonitorController extends Controller
 
     protected function getCantidadSolicitudesBarrio()
     {
-        $solicitudesPorBarrio = Solicitud::leftJoin('barrios', 'solicitudes.barrio_id', '=', 'barrios.id')
-            ->select(
-                'barrios.name as barrio',
-                DB::raw('count(*) as total'),
-                DB::raw('sum(case when estado_id = 1 then 1 else 0 end) as pendientes'),
-                DB::raw('sum(case when estado_id = 2 then 1 else 0 end) as aprobadas'),
-                DB::raw('sum(case when fecha_verificado is null then 1 else 0 end) as sin_verificar')
-            )
-            ->whereNotNull('barrios.id')
-            ->groupBy('barrios.name')
+        $solicitudesPorBarrio = Solicitud::select('barrio_id')
+            ->whereNotNull('barrio_id')
+            ->selectRaw('count(*) as total')
+            ->selectRaw('sum(case when estado_id = 1 then 1 else 0 end) as pendientes')
+            ->selectRaw('sum(case when estado_id = 2 then 1 else 0 end) as aprobadas')
+            ->selectRaw('sum(case when fecha_verificado is null then 1 else 0 end) as sin_verificar')
+            ->groupBy('barrio_id')
             ->get();
 
 
@@ -151,13 +149,14 @@ class MonitorController extends Controller
         $solicitudes_generadas = [];
         $solicitudes_pendientes = [];
         $solicitudes_aprobadas = [];
-        $solicitudes_sin_verificar = [];
+        /* $solicitudes_sin_verificar = []; */
         foreach ($solicitudesPorBarrio as $solicitudPorBarrio) {
-            $labels[] = $solicitudPorBarrio->barrio;
+            $barrio = BarrioMunicipio::find($solicitudPorBarrio->barrio_id);
+            $labels[] = $barrio->name;
             $solicitudes_generadas[] = $solicitudPorBarrio->total;
-            $solicitudes_pendientes[] = $solicitudPorBarrio->pendientes;
-            $solicitudes_aprobadas[] = $solicitudPorBarrio->aprobadas;
-            $solicitudes_sin_verificar[] = $solicitudPorBarrio->sin_verificar;
+            $solicitudes_pendientes[] = (int) $solicitudPorBarrio->pendientes;
+            $solicitudes_aprobadas[] = (int) $solicitudPorBarrio->aprobadas;
+            /* $solicitudes_sin_verificar[] = $solicitudPorBarrio->sin_verificar; */
         }
 
 

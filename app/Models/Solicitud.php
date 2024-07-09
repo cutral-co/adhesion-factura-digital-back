@@ -47,9 +47,9 @@ class Solicitud extends Model
         "estado_id",
         "barrio_id",
     ];
-    public function bar()
+    public function barrio_municipio()
     {
-        return $this->belongsTo(Barrio::class, 'barrio_id');
+        return $this->belongsTo(BarrioMunicipio::class, 'barrio_id');
     }
 
     public function provincia()

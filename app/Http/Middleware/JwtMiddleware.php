@@ -2,31 +2,42 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
-use Exception;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
-class JwtMiddleware extends \Tymon\JWTAuth\Http\Middleware\BaseMiddleware
+use App\Models\User;
+
+class JwtMiddleware extends \PHPOpenSourceSaver\JWTAuth\Http\Middleware\BaseMiddleware
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         try {
-            $user = \Tymon\JWTAuth\Facades\JWTAuth::parseToken()->authenticate();
-        } catch (Exception $e) {
-            if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
-                return sendResponse(null, 'Token invalido', 401);
-            } else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
-                return sendResponse(null, 'Token expiro', 401);
-            } else {
-                return sendResponse(null, 'Token no encontrado', 401);
+            $token = JWTAuth::parseToken();
+
+            $payload = $token->getPayload();
+
+            $id = $payload('id');
+            $cuit = $payload('cuit');
+
+            !User::find($id) && User::create(['id' => $id, 'cuit' => $cuit]);
+
+            JWTAuth::authenticate($token);
+        } catch (\Exception $e) {
+            if ($e instanceof \PHPOpenSourceSaver\JWTAuth\Exceptions\TokenInvalidException) {
+                return sendResponse(null, 'Llave invalida', 450);
             }
+            if ($e instanceof \PHPOpenSourceSaver\JWTAuth\Exceptions\TokenExpiredException) {
+                return sendResponse(null, 'Llave expiro', 450);
+            }
+
+            return sendResponse($e, 'Llave sin autorización', 450);
         }
+
         return $next($request);
     }
 }

@@ -35,44 +35,16 @@ class Handler extends ExceptionHandler
     public function register()
     {
         /* Cuando el usuario no se encuentra autorizado */
-        $this->renderable(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, $request) {
-            if (app()->environment('production')) {
-                return sendResponse(null, 'No se encuentra autorizado', 401);
-            } else {
-                return sendResponse(null, $e->getMessage(), 401);
-            }
-        });
+        $this->renderable(fn (\Spatie\Permission\Exceptions\UnauthorizedException $e, $request) => sendResponse(null, 'No se encuentra autorizado', 403));
 
-        $this->renderable(function (\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException $e) {
-
-            if (app()->environment('production')) {
-                return sendResponse(null, 'Acceso denegado', 302);
-            } else {
-                return sendResponse(null, $e->getMessage(), 302);
-            }
-        });
         /* Cuando no encuentra una ruta HTTP */
-        $this->renderable(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
-            if (app()->environment('production')) {
-                return sendResponse(null, 'No existe el recursos', 404);
-            } else {
-                return sendResponse(null, $e->getMessage(), 404);
-            }
-        });
+        $this->renderable(fn (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) => sendResponse(null, $e->getMessage(), 404));
 
         /* Método HTTP no permitido */
-        $this->renderable(function (\Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException $e, $request) {
-            return sendResponse(null, 'Método HTTP no permitido', 405);
-        });
+        $this->renderable(fn (\Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException $e, $request) => sendResponse(null, 'Método HTTP no permitido', 405));
 
-        /* Problema con la base de datos */
-        $this->renderable(function (\Illuminate\Database\QueryException $e, $request) {
-            if (app()->environment('production')) {
-                return sendResponse(null, 'Hubo un problema con la base de datos', 301);
-            } else {
-                return sendResponse(null, $e->getMessage(), 301);
-            }
-        });
+        /* Cuando ocurre una error en la base de datos */
+        $this->renderable(fn (\Illuminate\Database\QueryException $e, $request) => sendResponse(null, $e->getMessage(), 301));
     }
 
     protected function invalidJson($request, ValidationException $exception)

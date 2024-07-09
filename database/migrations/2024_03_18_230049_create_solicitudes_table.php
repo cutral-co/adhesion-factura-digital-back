@@ -20,7 +20,10 @@ class CreateSolicitudesTable extends Migration
             $table->string('cuit');
             $table->string('email');
             $table->string('phone');
+            $table->unsignedBigInteger('provincia_id')->nullable();
             $table->unsignedBigInteger('barrio_id');
+            $table->string('municipio')->nullable();
+            $table->string('barrio')->nullable();
             $table->string('calle');
             $table->string('altura');
             $table->string('manzana')->nullable();
@@ -33,10 +36,11 @@ class CreateSolicitudesTable extends Migration
             $table->unsignedBigInteger('estado_id')->default(1);
 
             $table->timestamps();
+            $table->softDeletes();
 
             /* relaciones */
-            $table->foreign('barrio_id')->references('id')->on('barrios');
             $table->foreign('estado_id')->references('id')->on('estados');
+
         });
     }
 
