@@ -80,22 +80,29 @@ class SolicitudController extends Controller
 
         $cuit = $request->cuit;
 
+        /* Cuando ya se encuentra adherido el CUIT, aprobado por administrador */
         $solicitud = Solicitud::where('cuit', $cuit)->where('estado_id', 2)->first();
         if ($solicitud) {
             return sendResponse(null, "Número de CUIT/CUIL ya se encuentra adherido a la factura digital");
         }
 
-        $solicitud = Solicitud::where('cuit', $cuit)->whereNotNull('fecha_verificado')->where('estado_id', 1)->first();
+        /* Cuando existe un registro con correo activado, enviando CUIT que no se encuentra rechazado */
+        $solicitud = Solicitud::where('cuit', $cuit)->whereNotNull('fecha_verificado')->where('estado_id', '!=', 3)->first();
         if ($solicitud) {
             return sendResponse(null, "Número de CUIT/CUIL ya tiene un correo electrónico activado");
+        }
+
+        /* Cuando existe un registro con correo activado, enviando correo que no se encuentra rechazado */
+        $solicitud = Solicitud::where('email', $request->email)->whereNotNull('fecha_verificado')->where('estado_id', '!=', 3)->first();
+        if ($solicitud) {
+            return sendResponse(null, "La cuenta de correo $request->email ya se encuentra registrada");
         }
 
         $body['token_verificacion'] = uniqid();
         $solicitud = Solicitud::create($body);
 
-        $link = env('APP_URL') . "verificar-correo?token=$solicitud->token_verificacion";
-
         try {
+            $link = env('APP_URL') . "verificar-correo?token=$solicitud->token_verificacion";
             Mail::to($solicitud->email)->send(new EmailConfirmacion($link));
             $solicitud->ultimo_envio_email = \Carbon\Carbon::now();
             $solicitud->save();
@@ -119,13 +126,13 @@ class SolicitudController extends Controller
         $token = $request->all();
         $solicitud = Solicitud::where('token_verificacion', $token)->first();
 
-        /* if (!$solicitud) {
+        if (!$solicitud) {
             return redirect('http://www.cutralco.gob.ar/');
         }
 
         if ($solicitud->fecha_verificado) {
             return redirect('http://www.cutralco.gob.ar/');
-        } */
+        }
 
         $solicitud->fecha_verificado = \Carbon\Carbon::now();
         $solicitud->save();
@@ -139,27 +146,6 @@ class SolicitudController extends Controller
 
 
         return view('emailConfirmation');
-    }
-
-    public function monitor()
-    {
-        $monitor = [
-            'total' => Solicitud::all()->count(),
-            'pendientes' => Solicitud::whereNotNull('fecha_verificado')->where('estado_id', 1)->count(),
-            'aprobadas' => Solicitud::where('estado_id', 2)->count(),
-            'rechazadas' => Solicitud::where('estado_id', 3)->count(),
-            'sin_verificar' => Solicitud::whereNull('fecha_verificado')->count(),
-        ];
-
-        $solicitudesPorMes = Solicitud::select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
-            DB::raw('COUNT(*) as total')
-        )
-            ->groupBy('month')
-            ->orderBy('month', 'asc')
-            ->get();
-
-        return sendResponse($solicitudesPorMes);
     }
 
     public function envio_correo_verificar()

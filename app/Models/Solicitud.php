@@ -38,6 +38,7 @@ class Solicitud extends Model
         "ultimo_envio_email",
         "fecha_verificado",
         "estado_id",
+        "is_afd",
     ];
 
     protected $hidden = [
@@ -47,6 +48,11 @@ class Solicitud extends Model
         "estado_id",
         "barrio_id",
     ];
+
+    protected $casts = [
+        'is_afd' => 'boolean',
+    ];
+
     public function barrio_municipio()
     {
         return $this->belongsTo(BarrioMunicipio::class, 'barrio_id');
