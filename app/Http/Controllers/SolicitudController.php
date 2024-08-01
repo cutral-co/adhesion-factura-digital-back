@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SolicitudResource;
+use App\Models\UserAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Mail, DB};
 
 use App\Mail\EmailAprobacion;
 use App\Mail\EmailConfirmacion;
+use App\Mail\EmailPassword;
 use App\Mail\EmailRechazo;
+use App\Models\Person;
 use App\Models\Solicitud;
 
 class SolicitudController extends Controller
@@ -64,7 +67,8 @@ class SolicitudController extends Controller
 
         /* confirmada */
         if ($solicitud->estado_id == 2) {
-            Mail::to($solicitud->email)->send(new EmailAprobacion());
+            $this->createUser($solicitud);
+            //Mail::to($solicitud->email)->send(new EmailAprobacion());
         }
 
         /* rechazada */
@@ -72,6 +76,26 @@ class SolicitudController extends Controller
             Mail::to($solicitud->email)->send(new EmailRechazo());
         }
         return sendResponse(new SolicitudResource($solicitud));
+    }
+
+    private function createUser($solicitud)
+    {
+        $_person = $solicitud->toArray();
+        unset($_person['id']);
+
+        $person = Person::create($_person);
+
+        $password = \Illuminate\Support\Str::random(8);
+        $hash = \Illuminate\Support\Facades\Hash::make($password);
+
+        UserAdmin::create([
+            'cuit' => $person->cuit,
+            'password' => $hash,
+            'person_id' => $person->id,
+            'is_verified' => true,
+        ]);
+
+        Mail::to($person->email)->send(new EmailPassword($password, $person));
     }
 
     public function store(Request $request)
@@ -143,8 +167,6 @@ class SolicitudController extends Controller
 
     public function correoVerificado(Request $request)
     {
-
-
         return view('emailConfirmation');
     }
 
