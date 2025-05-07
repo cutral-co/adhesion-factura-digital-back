@@ -23,6 +23,7 @@ class JwtMiddleware extends \PHPOpenSourceSaver\JWTAuth\Http\Middleware\BaseMidd
 
             $id = $payload('id');
             $cuit = $payload('cuit');
+            //return sendResponse($payload);
 
             !User::find($id) && User::create(['id' => $id, 'cuit' => $cuit]);
 
@@ -35,7 +36,7 @@ class JwtMiddleware extends \PHPOpenSourceSaver\JWTAuth\Http\Middleware\BaseMidd
                 return sendResponse(null, 'Llave expiro', 450);
             }
 
-            return sendResponse($e, 'Llave sin autorización', 450);
+            return sendResponse($e, 'Llave sin autosssssrización', 450);
         }
 
         return $next($request);

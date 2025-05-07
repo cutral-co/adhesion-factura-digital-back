@@ -123,6 +123,8 @@ class SolicitudController extends Controller
         }
 
         $body['token_verificacion'] = uniqid();
+        /* $body['ultimo_envio_email'] =  \Carbon\Carbon::now();
+        $body['fecha_verificado'] =  \Carbon\Carbon::now(); */
         $solicitud = Solicitud::create($body);
 
         try {
@@ -130,8 +132,8 @@ class SolicitudController extends Controller
             Mail::to($solicitud->email)->send(new EmailConfirmacion($link));
             $solicitud->ultimo_envio_email = \Carbon\Carbon::now();
             $solicitud->save();
-        } catch (\Throwable $th) {
-            //throw $th;
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
 
         return sendResponse($solicitud);
